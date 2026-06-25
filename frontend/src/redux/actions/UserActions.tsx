@@ -15,7 +15,7 @@ export const login = (user: IUserLogin) => async (dispatch: Dispatch) => {
             }
         };
 
-        const { data } = await axios.post("/api/users/login", user, config);
+        const { data } = await axios.post("/api/auth/login", user, config);
 
         dispatch({ type: actions.USER_LOGIN_SUCCESS, payload: data });
 
@@ -52,7 +52,7 @@ export const register = (user: IUserRegister) => async (dispatch: Dispatch) => {
             }
         };
 
-        const { data } = await axios.post("/api/users/register", user, config);
+        const { data } = await axios.post("/api/auth/register", user, config);
 
         dispatch({ type: actions.USER_REGISTER_SUCCESS });
         dispatch({ type: actions.USER_LOGIN_SUCCESS, payload: data });

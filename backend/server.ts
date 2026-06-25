@@ -8,6 +8,7 @@ import { errorHandler, notFound } from './middlewares/errorMiddleware';
 
 // Routes
 import roomRoutes from './routes/roomRoutes';
+import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import bookingRoutes from './routes/bookingRoutes';
 import uploadRoutes from './routes/uploadRoutes';
@@ -35,7 +36,10 @@ app.get("/api", (req: Request, res: Response)  => {
 // Room Route
 app.use("/api/rooms", roomRoutes);
 
-// User Route
+// Auth Routes
+app.use("/api/auth", authRoutes);
+
+// User Routes
 app.use("/api/users", userRoutes);
 
 // Booking Route

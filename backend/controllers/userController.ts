@@ -1,66 +1,8 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import User, { IUserRequest } from "../models/User";
 import generateToken from "../utils/generateToken";
-
-// @Desc Register user
-// @Route /api/users/register
-// @Method POST
-export const register = asyncHandler(async (req: Request, res: Response) => {
-  const { name, email, password, avatar } = req.body;
-
-  const user = new User({
-    name,
-    email,
-    password,
-    avatar
-  });
-
-  await user.save();
-
-  res.status(201).json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id)
-  });
-});
-
-
-// @Desc Login user
-// @Route /api/users/login
-// @Method POST
-export const login = asyncHandler(async (req: Request, res: Response) => {
-
-  const { email, password } = req.body;
-
-  const user = await User.findOne({ email })
-
-  if(!user) {
-    res.status(401);
-    throw new Error("User not found");
-  }
-
-  if(await user.comparePassword(password)) {
-
-    res.status(201).json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id)
-    });
-
-  } else {
-    res.status(401);
-    throw new Error("Email or password incorrect");
-  }
-
-})
 
 // @Desc Update profile
 // @Route /api/users/update
@@ -69,7 +11,7 @@ export const updateProfile = asyncHandler(async (req: IUserRequest, res: Respons
 
   let user = await User.findById(req.user.id);
 
-  if(!user) {
+  if (!user) {
     res.status(401);
     throw new Error("User not found");
   }
@@ -94,21 +36,21 @@ export const updateProfile = asyncHandler(async (req: IUserRequest, res: Respons
 // @Desc Update password
 // @Route /api/users/update/password
 // @Method PUT
-export const updatePassword = asyncHandler(async(req: IUserRequest, res: Response) => {
+export const updatePassword = asyncHandler(async (req: IUserRequest, res: Response) => {
 
   let user = await User.findById(req.user.id);
 
-  if(!user) {
+  if (!user) {
     res.status(401);
     throw new Error("User not found");
   }
 
   const { oldPassword, newPassword } = req.body;
 
-  if((await user.comparePassword(oldPassword))) {
+  if ((await user.comparePassword(oldPassword))) {
 
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(newPassword, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
 
     user = await User.findByIdAndUpdate(req.user.id, {
       password: hash
@@ -139,11 +81,11 @@ export const getAll = asyncHandler(async (req: Request, res: Response) => {
   const page = Number(req.query.pageNumber) || 1;
   const count = await User.countDocuments();
   const users = await User.find({}).select("-password").limit(pageSize).skip(pageSize * (page - 1));
-  res.status(201).json({  
-      users,
-      page,
-      pages: Math.ceil(count / pageSize),
-      count
+  res.status(201).json({
+    users,
+    page,
+    pages: Math.ceil(count / pageSize),
+    count
   });
 
 })
@@ -155,7 +97,7 @@ export const getSingleUser = asyncHandler(async (req: Request, res: Response) =>
 
   const user = await User.findById(req.params.id).select("-password");
 
-  if(!user) {
+  if (!user) {
     res.status(401);
     throw new Error("User not found");
   }
@@ -171,7 +113,7 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
 
   let user = await User.findById(req.params.id);
 
-  if(!user) {
+  if (!user) {
     res.status(401);
     throw new Error("User not found");
   }
@@ -189,7 +131,7 @@ export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
 
   let user = await User.findById(req.params.id);
 
-  if(!user) {
+  if (!user) {
     res.status(401);
     throw new Error("User not found");
   }

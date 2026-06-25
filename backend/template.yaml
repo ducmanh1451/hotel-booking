@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Hotel Booking Backend - Multi-Lambda Architecture
+
+Globals:
+  Function:
+    Runtime: nodejs24.x
+    Timeout: 30
+    MemorySize: 256
+    Architectures:
+      - x86_64
+
+Resources:
+  AuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: lambdas/authHandler.authHandler
+      Events:
+        LoginRoute:
+          Type: HttpApi
+          Properties:
+            Path: /api/auth/login
+            Method: post
+        RegisterRoute:
+          Type: HttpApi
+          Properties:
+            Path: /api/auth/register
+            Method: post
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: false
+        Target: "node24"
+        EntryPoints:
+          - lambdas/authHandler.ts
