@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+// import "react-datepicker/dist/react-datepicker.css";
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch, RootStateOrAny } from 'react-redux';
 import { getRoomDetails } from '../redux/actions/RoomActions';
@@ -16,7 +16,7 @@ import RoomFeatures from '../components/RoomFeatures';
 import { useAuthStatus } from '../hooks/useAuthStatus';
 import { Link } from 'react-router-dom';
 import { CHECK_ROOM_BOOKING_RESET, CREATE_BOOKING_RESET } from '../redux/constants/BookingConstants';
-import axios from 'axios';
+import api from '../api';
 import { PayPalButton } from "react-paypal-button-v2";
 import { createBooking } from '../redux/actions/BookingActions';
 import { getBookedDates } from '../redux/actions/BookingActions';
@@ -64,7 +64,7 @@ const RoomDetailsScreen = () => {
     useEffect(() => {
 
         const addPaypalScript = async () => {
-            const { data: clientId } = await axios.get("/api/config/paypal");
+            const { data: clientId } = await api.get("/api/config/paypal");
             const script = document.createElement("script");
             script.type = "text/javascript";
             script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;

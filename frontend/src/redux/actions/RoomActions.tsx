@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../../api';
 import { Dispatch } from 'redux';
 import * as actions from '../constants/RoomConstants';
 import { IRoom, ICreateReview, TCreateRoom } from '../../interfaces/IRoom';
@@ -9,7 +9,7 @@ async (dispatch: Dispatch) => {
         dispatch({ type: actions.FETCH_ROOMS_REQUEST });
 
         const { data } = 
-        await axios.get(`/api/rooms/?keyword=${keyword}&numOfBeds=${numOfBeds}&roomType=${roomType}&pageNumber=${currentPage}`);
+        await api.get(`/api/rooms/?keyword=${keyword}&numOfBeds=${numOfBeds}&roomType=${roomType}&pageNumber=${currentPage}`);
 
         dispatch({ type: actions.FETCH_ROOMS_SUCCESS, payload: data });
         
@@ -26,7 +26,7 @@ export const getRoomDetails = (id: IRoom['_id']) => async (dispatch: Dispatch) =
     try {
         dispatch({ type: actions.ROOM_DETAILS_REQUEST });
 
-        const { data } = await axios.get(`/api/rooms/${id}`);
+        const { data } = await api.get(`/api/rooms/${id}`);
         dispatch({ type: actions.ROOM_DETAILS_SUCCESS, payload: data });
 
     } catch (error: any) {
@@ -52,7 +52,7 @@ export const createRoomReview = (id: IRoom['_id'], review: ICreateReview) => asy
             }
         }
 
-        await axios.post(`/api/rooms/${id}/reviews`, review, config);
+        await api.post(`/api/rooms/${id}/reviews`, review, config);
         dispatch({ type: actions.ROOM_CREATE_REVIEW_SUCCESS });
 
     } catch (error: any) {
@@ -78,7 +78,7 @@ export const createRoom = (roomData: TCreateRoom) => async (dispatch: Dispatch, 
             }
         }
 
-        await axios.post(`/api/rooms`, roomData, config);
+        await api.post(`/api/rooms`, roomData, config);
         dispatch({ type: actions.CREATE_ROOM_SUCCESS });
 
     } catch (error: any) {
@@ -105,7 +105,7 @@ export const updateRoom = (roomId: IRoom['_id'], roomData: TCreateRoom) => async
             }
         };
 
-        await axios.put(`/api/rooms/${roomId}`, roomData, config);
+        await api.put(`/api/rooms/${roomId}`, roomData, config);
         dispatch({ type: actions.UPDATE_ROOM_SUCCESS });
 
     } catch (error: any) {
@@ -130,7 +130,7 @@ export const deleteRoom = (roomId: IRoom['_id']) => async (dispatch: Dispatch, g
             }
         }
 
-        await axios.delete(`/api/rooms/${roomId}`, config);
+        await api.delete(`/api/rooms/${roomId}`, config);
         dispatch({ type: actions.DELETE_ROOM_SUCCESS });
 
     } catch (error: any) {

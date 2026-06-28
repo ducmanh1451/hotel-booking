@@ -9,6 +9,15 @@ Globals:
     MemorySize: 256
     Architectures:
       - x86_64
+    VpcConfig:
+      SecurityGroupIds:
+        - sg-0f8aa0b56c8deacb5
+      SubnetIds:
+        - subnet-0d51dc6d4afc18ef9
+    Environment:
+      Variables:
+        MONGO_URI: ""
+        JWT_SECRET: ""
 
 Resources:
   AuthFunction:
@@ -17,16 +26,16 @@ Resources:
       CodeUri: ./
       Handler: lambdas/authHandler.authHandler
       Events:
-        LoginRoute:
+        AuthBaseRoute:
           Type: HttpApi
           Properties:
-            Path: /api/auth/login
-            Method: post
-        RegisterRoute:
+            Path: /api/auth
+            Method: ANY
+        AuthProxyRoute:
           Type: HttpApi
           Properties:
-            Path: /api/auth/register
-            Method: post
+            Path: /api/auth/{proxy+}
+            Method: ANY
     Metadata:
       BuildMethod: esbuild
       BuildProperties:
@@ -34,3 +43,51 @@ Resources:
         Target: "node24"
         EntryPoints:
           - lambdas/authHandler.ts
+
+  UserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: lambdas/userHandler.userHandler 
+      Events:
+        UserBaseRoute:
+          Type: HttpApi
+          Properties:
+            Path: /api/users
+            Method: ANY
+        UserProxyRoute:
+          Type: HttpApi
+          Properties:
+            Path: /api/users/{proxy+}
+            Method: ANY
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: false
+        Target: "node24"
+        EntryPoints:
+          - lambdas/userHandler.ts
+
+  RoomFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: lambdas/roomHandler.roomHandler 
+      Events:
+        RoomBaseRoute:
+          Type: HttpApi
+          Properties:
+            Path: /api/rooms
+            Method: ANY
+        RoomProxyRoute:
+          Type: HttpApi
+          Properties:
+            Path: /api/rooms/{proxy+}
+            Method: ANY
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: false
+        Target: "node24"
+        EntryPoints:
+          - lambdas/roomHandler.ts

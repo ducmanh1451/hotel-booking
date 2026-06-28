@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api";
 
 export type UploadedFile = {
   filename: string;
@@ -14,7 +14,7 @@ export const uploadImages = async (
     formData.append("image", file);
   });
 
-  const { data } = await axios.post<UploadedFile[]>("/api/uploads", formData, {
+  const { data } = await api.post<UploadedFile[]>("/api/uploads", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 

@@ -2,7 +2,7 @@ import express from 'express';
 import serverless from 'serverless-http';
 import cors from 'cors';
 import connectDB from '../config/db';
-import authRoutes from '../routes/authRoutes';
+import roomRoutes from '../routes/roomRoutes';
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use(async (req, res, next) => {
     }
 });
 
-app.use('/api/auth', authRoutes);
+app.use('/api/rooms', roomRoutes);
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
@@ -28,4 +28,4 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
     });
 });
 
-export const authHandler = serverless(app);
+export const roomHandler = serverless(app);

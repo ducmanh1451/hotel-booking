@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import axios from 'axios';
+import api from '../../api';
 import * as actions from '../constants/BookingConstants';
 import { IRoom } from "../../interfaces/IRoom";
 import { IBooking, ICreateBooking } from "../../interfaces/IBooking";
@@ -15,7 +15,7 @@ export const checkRoomBooking = (id: IRoom['_id'], checkInDate: Date, checkOutDa
             }
         }
 
-        await axios.post(`/api/bookings/check`, {id, checkInDate, checkOutDate}, config);
+        await api.post(`/api/bookings/check`, {id, checkInDate, checkOutDate}, config);
 
         dispatch({ type: actions.CHECK_ROOM_BOOKING_SUCCESS });
 
@@ -42,7 +42,7 @@ export const createBooking = (bookingData: ICreateBooking) => async (dispatch: D
             }
         }
 
-        await axios.post(`/api/bookings`, bookingData, config);
+        await api.post(`/api/bookings`, bookingData, config);
 
         dispatch({ type: actions.CREATE_BOOKING_SUCCESS });
 
@@ -60,7 +60,7 @@ export const getBookedDates = (roomId:  IRoom['_id']) => async (dispatch: Dispat
     try {
         dispatch({ type: actions.GET_BOOKED_DATES_REQUEST });
 
-        const { data } = await axios.get(`/api/bookings/dates/${roomId}`);
+        const { data } = await api.get(`/api/bookings/dates/${roomId}`);
 
         dispatch({ type: actions.GET_BOOKED_DATES_SUCCESS, payload: data });
 
@@ -87,7 +87,7 @@ export const getMyBookings = () => async (dispatch: Dispatch, getState: any) => 
             }
         };
 
-        const { data } = await axios.get(`/api/bookings/me`, config);
+        const { data } = await api.get(`/api/bookings/me`, config);
 
         dispatch({ type: actions.GET_MY_BOOKINGS_SUCCESS, payload: data });
 
@@ -114,7 +114,7 @@ export const getAllBookings = (currentPage: number) => async (dispatch: Dispatch
             }
         };
 
-        const { data } = await axios.get(`/api/bookings/?pageNumber=${currentPage}`, config);
+        const { data } = await api.get(`/api/bookings/?pageNumber=${currentPage}`, config);
 
         dispatch({ type: actions.FETCH_BOOKINGS_SUCCESS, payload: data });
 
@@ -140,7 +140,7 @@ export const deleteBooking = (bookingId: IBooking['_id']) => async (dispatch: Di
             }
         };
 
-        await axios.delete(`/api/bookings/${bookingId}`, config);
+        await api.delete(`/api/bookings/${bookingId}`, config);
 
         dispatch({ type: actions.DELETE_BOOKING_SUCCESS });
 

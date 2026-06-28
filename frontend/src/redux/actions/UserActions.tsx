@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import * as actions from '../constants/UserConstants';
-import axios from 'axios';
+import api from '../../api';
 import { IUpdatePassword, IUser, IUserLogin, IUserRegister } from '../../interfaces/IUser';
 
 export const login = (user: IUserLogin) => async (dispatch: Dispatch) => {
@@ -15,7 +15,7 @@ export const login = (user: IUserLogin) => async (dispatch: Dispatch) => {
             }
         };
 
-        const { data } = await axios.post("/api/auth/login", user, config);
+        const { data } = await api.post("/api/auth/login", user, config);
 
         dispatch({ type: actions.USER_LOGIN_SUCCESS, payload: data });
 
@@ -52,7 +52,7 @@ export const register = (user: IUserRegister) => async (dispatch: Dispatch) => {
             }
         };
 
-        const { data } = await axios.post("/api/auth/register", user, config);
+        const { data } = await api.post("/api/auth/register", user, config);
 
         dispatch({ type: actions.USER_REGISTER_SUCCESS });
         dispatch({ type: actions.USER_LOGIN_SUCCESS, payload: data });
@@ -86,7 +86,7 @@ export const updateProfile = (user: {}) => async (dispatch: Dispatch, getState: 
             }
         };
 
-        const { data } = await axios.put("/api/users/update", user, config);
+        const { data } = await api.put("/api/users/update", user, config);
 
         dispatch({ type: actions.UPDATE_PROFILE_SUCCESS });
         dispatch({ type: actions.USER_LOGIN_SUCCESS, payload: data });
@@ -123,7 +123,7 @@ export const updatePassword = (user: IUpdatePassword) => async (dispatch: Dispat
             }
         };
 
-        const { data } = await axios.put("/api/users/update/password", user, config);
+        const { data } = await api.put("/api/users/update/password", user, config);
 
         dispatch({ type: actions.UPDATE_PASSWORD_SUCCESS });
         dispatch({ type: actions.USER_LOGIN_SUCCESS, payload: data });
@@ -160,7 +160,7 @@ export const fetchUsers = (currentPage: number) => async (dispatch: Dispatch, ge
             }
         };
 
-        const { data } = await axios.get(`/api/users/?pageNumber=${currentPage}`, config);
+        const { data } = await api.get(`/api/users/?pageNumber=${currentPage}`, config);
 
         dispatch({ type: actions.FETCH_USERS_SUCCESS, payload: data });
 
@@ -194,7 +194,7 @@ export const deleteUser = (userId: IUser['_id']) => async (dispatch: Dispatch, g
             }
         };
 
-        await axios.delete(`/api/users/${userId}`, config);
+        await api.delete(`/api/users/${userId}`, config);
 
         dispatch({ type: actions.DELETE_USER_SUCCESS });
 
@@ -228,7 +228,7 @@ export const detailsUser = (userId: IUser['_id']) => async (dispatch: Dispatch, 
             }
         };
 
-        const { data } = await axios.get(`/api/users/${userId}`, config);
+        const { data } = await api.get(`/api/users/${userId}`, config);
 
         dispatch({ type: actions.GET_USER_SUCCESS, payload: data });
 
@@ -262,7 +262,7 @@ export const updateUser = (userId: IUser['_id'], userData: {}) => async (dispatc
             }
         };
 
-        await axios.put(`/api/users/${userId}`, userData, config);
+        await api.put(`/api/users/${userId}`, userData, config);
 
         dispatch({ type: actions.UPDATE_USER_SUCCESS });
 
